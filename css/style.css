@@ -9,7 +9,7 @@
 
 body{
     width: 100%;
-    background-color: skyblue;
+    background-color: #999;
 }
 
 .container{
@@ -40,10 +40,17 @@ body{
 
 .form .btn{
     padding: 0.7rem;
-    background-color: darkblue;
+    background-color: #000;
+    border: 2px solid #000;
     color: #fff;
     cursor: pointer;
-    border: none;
+    border-radius:5px ;
+    transition: all .5s;
+}
+.form .btn:hover {
+    background-color: #fff;
+    border: 2px solid #000;
+    color: #000;
 }
 
 .lists .todo{
