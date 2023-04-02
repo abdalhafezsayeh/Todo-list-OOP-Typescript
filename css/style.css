@@ -62,6 +62,14 @@ body{
     padding: 0.5rem;
 }
 
+.todo {
+    text-transform: capitalize;
+}
 .todo span{
     cursor: pointer;
+
+}
+.textContent {
+    outline: none;
+
 }
