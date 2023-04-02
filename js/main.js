@@ -32,9 +32,12 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
     let id = Math.random() * 1000000;
     const todo = new Todo(id, input.value);
-    todoArr = [...todoArr, todo];
+    if(!todo.todo) {
+        alert('The Input Is Empty')
+    } else {
+        todoArr = [...todoArr, todo];
+    }
 
-    
     UI.displayData();
     UI.clearInput();
     //add to storage
@@ -47,12 +50,15 @@ form.addEventListener("submit", (e) => {
 class UI{
     static displayData(){
         let displayData = todoArr.map((item) => {
-            return `
-                <div class="todo">
-                    <p>${item?.todo}</p>
-                    <span class="remove" data-id=${item?.id}>🗑️</span>
-                </div>
-                `
+                return `
+                    <div class="todo">
+                        <p class="textContent">${item?.todo}</p>
+                        <div class="icons">
+                            <span class="remove" data-id=${item?.id}>🗑️</span>
+                            <span class="edite" data-id=${item?.id}>🖋️</span>
+                        </div>
+                    </div>
+                `   
         });
         lists.innerHTML = displayData.join("");
     }
@@ -64,11 +70,11 @@ class UI{
     static removeTodo(){
         lists.addEventListener("click", (e) => {
             if(e.target.classList.contains("remove")){
-                e.target.parentElement.remove();
+                e.target.parentElement.parentElement.remove();
+
+                let btnId = e.target.dataset.id;
+                UI.removeArrayTodo(btnId);
             }
-            let btnId = e.target.dataset.id;
-            //remove from array.
-            UI.removeArrayTodo(btnId);
         });
     }
     
@@ -76,6 +82,31 @@ class UI{
         todoArr = todoArr.filter((item) => item.id !== +id);
         Storage.setTodoInStorage(todoArr);
     }
+
+    static editeTodo() {
+        let toggleButton = true;
+        lists.addEventListener('click', (e) =>{
+            if(e.target.classList.contains('edite')) {
+                let p = e.target.parentElement.parentElement.firstElementChild;
+                let bt = e.target.dataset.id;
+                if(toggleButton) {
+                    e.target.textContent = "Save";
+                    p.setAttribute("contenteditable", "true");
+                    p.focus();
+
+                } else {
+                    e.target.textContent = "🖋️";
+                    p.removeAttribute("contenteditable");
+                    let indexTheOneTodo = todoArr.findIndex((item)=> item.id === +bt)
+                    todoArr[indexTheOneTodo].todo = p.textContent;
+                    Storage.setTodoInStorage(todoArr);
+                }
+
+            }
+            toggleButton = !toggleButton
+        });
+    }
+
 }
 
 // once the browser is loaded
@@ -83,12 +114,19 @@ window.addEventListener("DOMContentLoaded", () => {
     UI.displayData();
     //remove from the dom
     UI.removeTodo();
+    // Edite 
+    UI.editeTodo();
 });
 
-window.addEventListener("offline", (event) => {
-    console.log("The network connection has been lost.");
-});
+
+
+
+
+// window.addEventListener("offline", (event) => {
+//     console.log("The network connection has been lost.");
+// });
   
-window.addEventListener("online", (event) => {
-    console.log("You are now connected to the network.");
-});
+// window.addEventListener("online", (event) => {
+//     console.log("You are now connected to the network.");
+// });
+
