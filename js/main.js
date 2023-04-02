@@ -91,13 +91,15 @@ class UI{
                 let bt = e.target.dataset.id;
                 if(toggleButton) {
                     e.target.textContent = "Save";
+                    p.style.color = 'blue';
                     p.setAttribute("contenteditable", "true");
                     p.focus();
 
                 } else {
                     e.target.textContent = "🖋️";
                     p.removeAttribute("contenteditable");
-                    let indexTheOneTodo = todoArr.findIndex((item)=> item.id === +bt)
+                    let indexTheOneTodo = todoArr.findIndex((item)=> item.id === +bt);
+                    p.style.color = 'black';
                     todoArr[indexTheOneTodo].todo = p.textContent;
                     Storage.setTodoInStorage(todoArr);
                 }
